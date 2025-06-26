@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link href="emailstyle.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <header role="banner">
+    Genesis Gambia
+	<div class="header-container">
+    <img src="GENESIS.png" alt="Genesis Gambia" width="250" height="150">
+    <nav class="desktop-nav" role="navigation" aria-label="Primary navigation">
+      <a href="#home" tabindex="0">Home</a>
+      <a href="#about" tabindex="0">About</a>
+      <a href="#features" tabindex="0">Services</a>
+      <a href="email.html" tabindex="0">Contact</a>
+    </nav>
+    <button 
+      class="mobile-menu-toggle" 
+      aria-controls="mobile-menu" 
+      aria-expanded="false" 
+      aria-label="Toggle mobile menu"
+      id="mobile-menu-button"
+    >
+    </button>
+  </div>
+  <nav class="mobile-nav" id="mobile-menu" role="navigation" aria-label="Mobile navigation" hidden>
+    <a href="#home" tabindex="-1">Home</a>
+    <a href="#about" tabindex="-1">About</a>
+    <a href="#features" tabindex="-1">Services</a>
+    <a href="email.html" tabindex="-1">Contact</a>
+  </nav>
+  </header>
+  <main>
+    <form novalidate aria-describedby="form-desc" aria-live="polite" aria-atomic="true">
+      <p id="form-desc" style="margin-bottom:16px; font-size: 1rem; color: #555;">Please enter your email and message below:</p>
+      <label for="email">Email Address</label>
+      <input id="email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required aria-describedby="email-error" aria-required="true" />
+      <div class="error-message" id="email-error" aria-live="assertive"></div>
+      
+      <label for="message">Message</label>
+      <textarea id="message" name="message" rows="5" placeholder="Your message here..." required aria-describedby="message-error" aria-required="true"></textarea>
+      <div class="error-message" id="message-error" aria-live="assertive"></div>
+      
+      <button type="submit" disabled aria-live="polite" aria-busy="false">
+        Send Email
+        <span class="material-icons" aria-hidden="true">send</span>
+      </button>
+    </form>
+  </main>
+
+  <div id="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <span class="material-icons" aria-hidden="true">check_circle</span>
+    <span id="toast-msg">Email sent successfully!</span>
+  </div>
+
+<footer role="contentinfo">
+  <p>© 2025 Genesis Gambia. All rights reserved.</p>
+  <p>
+    <a href="trial.html">Home</a> | 
+    <a href="#about">About</a> | 
+    <a href="#features">Services</a> | 
+    <a href="#contact">Contact</a>
+  </p>
+</footer>
+<script>
+  (() => {
+    const form = document.querySelector('form');
+    const emailInput = document.getElementById('email');
+    const messageInput = document.getElementById('message');
+    const emailError = document.getElementById('email-error');
+    const messageError = document.getElementById('message-error');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toast-msg');
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function validateEmail() {
+      const value = emailInput.value.trim();
+      if (!value) {
+        emailError.textContent = 'Email is required.';
+        emailInput.classList.add('error');
+        return false;
+      } 
+      if (!emailPattern.test(value)) {
+        emailError.textContent = 'Please enter a valid email.';
+        emailInput.classList.add('error');
+        return false;
+      }
+      emailError.textContent = '';
+      emailInput.classList.remove('error');
+      return true;
+    }
+
+    function validateMessage() {
+      const value = messageInput.value.trim();
+      if (!value) {
+        messageError.textContent = 'Message is required.';
+        messageInput.classList.add('error');
+        return false;
+      }
+      if (value.length < 5) {
+        messageError.textContent = 'Message must be at least 5 characters.';
+        messageInput.classList.add('error');
+        return false;
+      }
+      messageError.textContent = '';
+      messageInput.classList.remove('error');
+      return true;
+    }
+
+    function validateForm() {
+      const emailValid = validateEmail();
+      const messageValid = validateMessage();
+      submitBtn.disabled = !(emailValid && messageValid);
+    }
+
+    emailInput.addEventListener('input', validateForm);
+    messageInput.addEventListener('input', validateForm);
+
+    function showToast(message) {
+      toastMsg.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (submitBtn.disabled) return;
+
+      submitBtn.disabled = true;
+      submitBtn.setAttribute('aria-busy', 'true');
+
+      // Simulate email sending delay
+      setTimeout(() => {
+        showToast('Email sent successfully!');
+        form.reset();
+        submitBtn.disabled = true;
+        submitBtn.setAttribute('aria-busy', 'false');
+        emailInput.focus();
+      }, 1500);
+    });
+
+    // Initial validation state
+    validateForm();
+  })();
+</script>
+</body>
+</html>
+
